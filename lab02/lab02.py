@@ -2,6 +2,10 @@
 
 # Lambda Functions
 
+from operator import ne
+import re
+
+
 def lambda_curry2(func):
     """
     Returns a Curried version of a two-argument function FUNC.
@@ -18,7 +22,12 @@ def lambda_curry2(func):
     3
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    def f(x):
+        def g(y):
+            return func(x, y)
+        return g
+
+    return f
 
 def count_cond(condition):
     """Returns a function with one parameter N that counts all the numbers from
@@ -48,6 +57,14 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    def func(n):
+        i, count = 1, 0
+        while i <= n:
+            if condition(n, i):
+                count += 1
+            i += 1
+        return count
+    return func
 
 def both_paths(sofar="S"):
     """
@@ -61,6 +78,16 @@ def both_paths(sofar="S"):
     SLL
     """
     "*** YOUR CODE HERE ***"
+    l = sofar+'L'
+    r = sofar+'R'
+
+    def call(param_value):
+        def call_value():
+            return both_paths(sofar=param_value)
+        return call_value
+
+    print(sofar)
+    return call(l), call(r)
 
 # Higher Order Functions
 
@@ -96,6 +123,10 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    def identity(x):
+        return compose1(f, g)(x) == compose1(g, f)(x)
+
+    return identity
 
 def cycle(f1, f2, f3):
     """Returns a function that is itself a higher-order function.
@@ -124,3 +155,17 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+
+    def do_cycle(n):
+        def f(x):
+            for i in range(n):
+                if i % 3 == 0:
+                    x = f1(x)
+                elif i % 3 == 1:
+                    x = f2(x)
+                else:
+                    x = f3(x)
+            return x
+        return f
+
+    return do_cycle
