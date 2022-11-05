@@ -1,3 +1,4 @@
 .vscode
 **/.ok*
 **/ok
+**/__pycache__
